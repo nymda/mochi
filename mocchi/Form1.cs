@@ -41,6 +41,10 @@ namespace mocchi
                     g.FillRectangle(Brushes.White, 0, 0, 100, 100);
                     pictureBox2.Image = representation;
                     numericUpDown1.Maximum = data.Length;
+
+                    button1.Enabled = true;
+                    button4.Enabled = true;
+                    button5.Enabled = true;
                 }
             }
         }
@@ -150,6 +154,10 @@ namespace mocchi
             {
                 //image is corrupt
                 timer1.Stop();
+                button1.Enabled = false;
+                button4.Enabled = false;
+                button5.Enabled = false;
+                MessageBox.Show("The image has become too corrupt to read.\nPlease save or load a new one.");
             }
         }
 

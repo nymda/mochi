@@ -84,18 +84,63 @@ namespace mocchi
 
         public void glitchImage()
         {
-            Random rnd = new Random();
-            byte[] b = new byte[1];
-            int location;
-            rnd.NextBytes(b);
-            location = rnd.Next((int)numericUpDown1.Value, bufferdata.Length);
+            int location = 0;
+
+            if (radioButton1.Checked)
+            {
+                //byte replacement
+                Random rnd = new Random();
+                byte[] b = new byte[1];
+                rnd.NextBytes(b);
+                location = rnd.Next((int)numericUpDown1.Value, bufferdata.Length);
+                bufferdata[location] = b[0];
+          }
+
+            if (radioButton2.Checked)
+            {
+                //byte duplication, chunks of 100 bytes
+                Random rnd = new Random();
+                int locationcopy = rnd.Next((int)numericUpDown1.Value, bufferdata.Length - 100);
+                location = rnd.Next((int)numericUpDown1.Value, bufferdata.Length - 100);
+                for (int o = 0; o < 100; o++)
+                {
+                    bufferdata[location + o] = bufferdata[locationcopy + o];
+                }
+            }
+
+            if (radioButton3.Checked)
+            {
+                //byte add
+                Random rnd = new Random();
+                byte[] b = new byte[1];
+                rnd.NextBytes(b);
+                location = rnd.Next((int)numericUpDown1.Value, bufferdata.Length);
+                List<byte> blist = bufferdata.ToList();
+                blist.Insert(location, b[0]);
+                bufferdata = blist.ToArray();
+            }
+
+            if (radioButton4.Checked)
+            {
+                //byte remove
+                Random rnd = new Random();
+                byte[] b = new byte[1];
+                rnd.NextBytes(b);
+                location = rnd.Next((int)numericUpDown1.Value, bufferdata.Length);
+                List<byte> blist = bufferdata.ToList();
+                blist.RemoveAt(location);
+                bufferdata = blist.ToArray();
+            }
+
+            //graphics generation
             int percentage = (location / (bufferdata.Length / 100));
             Image representation = pictureBox2.Image;
             Graphics g = Graphics.FromImage(representation);
             g.DrawLine(new Pen(Rainbow(appears(percentage))), percentage, 100, percentage, 0);
             percentages.Add(percentage);
             pictureBox2.Image = representation;
-            bufferdata[location] = b[0];
+
+            //image display
             try
             {
                 MemoryStream ms = new MemoryStream(bufferdata);
@@ -103,16 +148,8 @@ namespace mocchi
             }
             catch
             {
-                try
-                {
-                    pictureBox1.Dispose();
-                    MemoryStream ms2 = new MemoryStream(data);
-                    pictureBox1.Image = Image.FromStream(ms2);
-                }
-                catch
-                {
-
-                }
+                //image is corrupt
+                timer1.Stop();
             }
         }
 
@@ -159,7 +196,7 @@ namespace mocchi
 
             this.Invoke(new MethodInvoker(delegate ()
             {
-                encoding.Close();
+                encoding.Hide();
             }));
 
             fresh.Save(filename);
@@ -177,6 +214,11 @@ namespace mocchi
                 a.IsBackground = true;
                 a.Start();
             }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

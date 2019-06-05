@@ -228,5 +228,11 @@ namespace mocchi
         {
 
         }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            Form about = new about();
+            about.Show();
+        }
     }
 }

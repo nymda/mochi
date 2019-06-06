@@ -23,7 +23,7 @@ namespace mocchi
         public byte[] bufferdata;
         public string filePath;
         public List<int> percentages = new List<int> { };
-        public Form encoding = new encoding();
+        public encoding encoding = new encoding();
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -190,6 +190,8 @@ namespace mocchi
         {
             Bitmap fresh = new Bitmap(pictureBox1.Image.Width, pictureBox1.Image.Height);
             Graphics gr = Graphics.FromImage(fresh);
+            int counter = 0;
+            int pixelsmax = pictureBox1.Image.Width * pictureBox1.Image.Height;
 
             for (int i = 0; i < pictureBox1.Image.Width; i++)
             {
@@ -199,8 +201,12 @@ namespace mocchi
                     Color p = n.GetPixel(i, o);
                     SolidBrush b = new SolidBrush(p);
                     gr.FillRectangle(b, i, o, 1, 1);
+                    counter++;
                 }
+                encoding.updateBar(pixelsmax, counter);
             }
+
+            encoding.updateBar(pixelsmax, counter);
 
             this.Invoke(new MethodInvoker(delegate ()
             {
